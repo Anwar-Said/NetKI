@@ -1,0 +1,34 @@
+using PyCall
+using Laplacians
+using SparseArrays
+using Random, Distributions
+const scipy_sparse_find = pyimport("scipy.sparse")["find"]
+function mysparse(Apy::PyObject)
+    IA, JA, SA = scipy_sparse_find(Apy)
+    return sparse(Int[i+1 for i in IA], Int[i+1 for i in JA], SA)
+end
+function LapSolv_ER(A,Q,itr)
+  Z = []
+  B = mysparse(A)
+  for i in 1:itr
+    b = Q[i,:]
+    sol = approxchol_lap(B)
+    x = sol(b, tol = 1e-2)
+    push!(Z,x)
+  end
+
+  return Z
+end
+
+function LapSolv_Score(A,itr)
+  Bio = Binomial(1)
+  sol_mat = []
+  B = mysparse(A)
+  for i in 1:itr
+    b = rand(Bio, size(B)[1])
+    sol = approxchol_lap(B)
+    x = sol(b, tol = 1e-2)
+    push!(sol_mat,x)
+  end
+  return sol_mat
+end
