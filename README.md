@@ -1,9 +1,6 @@
 # NetKI
-NetKI algorithm for graph encoding
 
-
-NetKI: A nearly linear time Graph Representation Method
-
+NetKI: Spectral graph representation in nearly linear time
 required packages:
 
 numpy
