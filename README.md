@@ -1,11 +1,11 @@
 # NetKI
 
-NetKI: Spectral graph representation in nearly linear time
+NetKI: A Kirchhoff Index Based Statistical Graph Embedding in Nearly Linear Time - currently under review in Neurocomputing journal. 
 required packages:
 
-numpy
-networkx
-julia
+numpy,
+networkx,
+julia,
 scipy.sparse
 
 to connect with julia, install the following packages
