@@ -16,5 +16,8 @@ Pkg.add("Laplacians")
 Pkg.add("PyCall")
 Pkg.add("IJulia")
 Pkg.add("Distributions")
-Pkg.build("PyCall")
+Pkg.build("PyCall") 
+
+type the following command to run the code: 
+python main.py
 
