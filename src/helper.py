@@ -35,7 +35,7 @@ class helper:
     def EstimateReff(self,A,B,N,E):
         # print("estimating effective resistance")
         itr = math.ceil(math.log(N,10))
-        itr = 50
+        #itr = 50
         Q = np.random.binomial(1,0.5,size = (itr,E))
         Q = csc_matrix((Q*2)-1)
         QB = Q.dot(B).todense()
@@ -44,7 +44,7 @@ class helper:
         return np.array(Z)
     def computeCentAll(self,distance, A,N,edges):
         M = math.ceil(((pow(self.epsilon, -2))) * (math.log(N, 10)))
-        M = 100
+        #M = 100
         index_score = np.zeros((N, N), dtype=np.float32)
         LapSol = self.jl.LapSolv_Score(A,M)
         LapSol = np.array(LapSol)
