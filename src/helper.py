@@ -8,13 +8,18 @@ import networkx as nx
 from numpy.linalg import linalg as LA
 from scipy.sparse import csc_matrix
 import julia
+from sklearn.model_selection import GridSearchCV,StratifiedKFold
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+import multiprocessing
+from sklearn.utils import shuffle
 class helper:
     jl = None
     epsilon = 0.5
     theta = 0.5
     def create_env(self):
         print("creating environment...")
-        # julia.install()
+        julia.install()
         self.jl = julia.Julia()
         #in case of julia path issue, uncomment jl.install()
         self.jl.include("../julia/LapSolver")
@@ -242,3 +247,24 @@ class helper:
             if (count % 100 == 0):
                 print("{} embeddings generated.".format(count))
         return np.array(feature_matrix)
+    
+    def apply_RF(data_X, data_y):
+        num_cores = multiprocessing.cpu_count()
+        max_arr     = []
+        feature_imp = []
+        estimator  = RandomForestClassifier(criterion='gini', max_depth=None, min_weight_fraction_leaf=0.0,
+                                                max_leaf_nodes=None, bootstrap=True, 
+                                                oob_score=False, n_jobs=num_cores-2,verbose=0, warm_start=False,
+                                                class_weight=None,n_estimators=500)
+        for i in range(10):
+            
+            kf = StratifiedKFold(n_splits=10, shuffle = True)
+            grid_rf    = GridSearchCV(estimator, {}, scoring='accuracy', n_jobs=num_cores-2, 
+                        refit=True, cv=kf, verbose=1, pre_dispatch='n_jobs', 
+                        error_score='raise')
+
+            grid_rf.fit(data_X, data_y)
+            max_arr.append(grid_rf.best_score_)
+            
+        return np.mean(max_arr)
+
