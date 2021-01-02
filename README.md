@@ -1,6 +1,6 @@
 # NetKI
 
-NetKI: A Kirchhoff Index Based Statistical Graph Embedding in Nearly Linear Time - currently under review in Neurocomputing journal. <br />
+NetKI: A Kirchhoff Index Based Statistical Graph Embedding in Nearly Linear Time <br />
 required packages:<br />
 
 numpy <br />
@@ -21,3 +21,12 @@ Pkg.build("PyCall") <br />
 type the following command to run the code: <br />
 python main.py<br />
 
+Please cite our paper with the following information;
+
+@article{said2020netki,
+  title={NetKI: A Kirchhoff Index Based Statistical Graph Embedding in Nearly Linear Time},
+  author={Said, Anwar and Hassan, Saeed-Ul and Abbas, Waseem and Shabbir, Mudassir},
+  journal={Neurocomputing},
+  year={2020},
+  publisher={Elsevier}
+}
