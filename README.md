@@ -4,7 +4,7 @@ NetKI: A Kirchhoff Index Based Statistical Graph Embedding in Nearly Linear Time
 required packages:<br />
 
 numpy <br />
-networkx <br />
+networkx==2.2 <br />
 julia <br />
 scipy.sparse <br />
 
