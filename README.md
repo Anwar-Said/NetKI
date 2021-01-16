@@ -21,6 +21,8 @@ Pkg.build("PyCall") <br />
 type the following command to run the code: <br />
 python main.py<br />
 
+Alternatively, embeddings provided in NetKI_embeddings directory can be used for reproducablility of the results.
+
 Please cite our paper with the following information;
 
 @article{said2020netki,
