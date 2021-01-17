@@ -15,9 +15,11 @@ graphs,y= obj.return_dataset(dataset)
 #load dataset from file
 # graphs, y = obj.load_data(dataset)
 # graphs, labels = obj.load_data_from_numpy()
-bins = 100
+bins = 200
 print("total graphs in the dataset:",len(graphs))
 scores,max_val = obj.GenerateAllApproxEmb(graphs)
 scaled_data, max_val = obj.remove_outliers(scores)
 emb = obj.generateHistogram(scaled_data, max_val,bins)
 print("embedding shape:", emb.shape)
+acc = obj.apply_RF_Grid(emb, y)
+print("accuracy:", acc)
