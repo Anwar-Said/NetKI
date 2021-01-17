@@ -2,8 +2,8 @@ import numpy as np
 import math
 import scipy.io
 import time
-from grakel import GraphKernel, datasets
-# import csv,igraph
+# from grakel import GraphKernel, datasets
+import csv
 import networkx as nx
 from numpy.linalg import linalg as LA
 from scipy.sparse import csc_matrix
@@ -19,10 +19,10 @@ class helper:
     theta = 0.5
     def create_env(self):
         print("creating environment...")
-        julia.install()
+        # julia.install()
         self.jl = julia.Julia()
         #in case of julia path issue, uncomment jl.install()
-        self.jl.include("../julia/LapSolver")
+        self.jl.include("julia/LapSolver")
 
     # fetch dataset from graph kernel website using grakel
     def return_dataset(self, file_name):
@@ -65,7 +65,13 @@ class helper:
         max_val = 1
         index_matrix = []
         for index, A in enumerate(data):
-            g1 = nx.from_numpy_matrix(A)
+            print("index:",index)
+
+            if isinstance(A,np.ndarray):
+                g1 = nx.from_numpy_matrix(A)
+            else:
+                g1 = A
+            
             if not nx.is_connected(g1):
                 #need to compute max connected component and relabel it
                 g2 = max(nx.connected_component_subgraphs(g1), key=len)
@@ -248,23 +254,25 @@ class helper:
                 print("{} embeddings generated.".format(count))
         return np.array(feature_matrix)
     
-    def apply_RF(data_X, data_y):
+    def apply_RF_Grid(data_X,data_y):
         num_cores = multiprocessing.cpu_count()
-        max_arr     = []
-        feature_imp = []
+        max_arr = []
         estimator  = RandomForestClassifier(criterion='gini', max_depth=None, min_weight_fraction_leaf=0.0,
                                                 max_leaf_nodes=None, bootstrap=True, 
                                                 oob_score=False, n_jobs=num_cores-2,verbose=0, warm_start=False,
-                                                class_weight=None,n_estimators=500)
-        for i in range(10):
-            
-            kf = StratifiedKFold(n_splits=10, shuffle = True)
-            grid_rf    = GridSearchCV(estimator, {}, scoring='accuracy', n_jobs=num_cores-2, 
-                        refit=True, cv=kf, verbose=1, pre_dispatch='n_jobs', 
-                        error_score='raise')
+                                                class_weight=None)
+        for seed in [567,890,5678,78, 6,1122,101,11111,42,345]:
+             
+            param_grid = {'n_estimators':[50,100,500], 'max_features':['sqrt'], 
+                          'min_samples_split':[2,3,4,5,10], 'min_samples_leaf':[1,2,5]}
+            kf = StratifiedKFold(n_splits=10, random_state = seed, shuffle = True)
+            grid_rf    = GridSearchCV(estimator, param_grid, scoring='accuracy', n_jobs=num_cores-2, 
+                         refit=True, cv=kf, verbose=1, pre_dispatch='n_jobs', 
+                         error_score='raise')
 
             grid_rf.fit(data_X, data_y)
             max_arr.append(grid_rf.best_score_)
-            
-        return np.mean(max_arr)
+
+    #     print('mean score:',np.mean(max_arr))
+    return np.mean(max_arr)
 
